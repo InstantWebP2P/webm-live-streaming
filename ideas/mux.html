@@ -1,0 +1,47 @@
+<!doctype html>
+
+<head>
+
+  
+</head>
+
+<body>
+
+<div class="wmls">
+ 
+  <div class="active">
+    <video title="active" id="a1" controls="controls" autoplay loop muted >
+      <!-- <source src="oceans.mp4" type="video/mp4"> -->
+       <source src="face.webm" type="video/webm">
+    </video>
+  </div>
+
+  <div class="standby" hidden="hidden">
+    <video title="standby" id="s1" controls="controls" autoplay loop muted>
+      <source src="oceans.webm" type="video/webm">
+    </video>
+  </div>
+
+<script>
+  var swo = true;
+  var itl = setInterval(function(){
+      var v1 = document.getElementsByClassName("active");
+      var v2 = document.getElementsByClassName("standby");
+
+      if (swo) {
+          v1[0].setAttribute("hidden", "hidden");
+          v2[0].removeAttribute("hidden");
+      } else {
+          v2[0].setAttribute("hidden", "hidden");
+          v1[0].removeAttribute("hidden");
+      }
+  
+      swo = !swo;
+      
+      ///alert('video switch over ...');
+  }, 2000); // switch over every 2s
+</script>
+
+</div>
+  
+</body>
