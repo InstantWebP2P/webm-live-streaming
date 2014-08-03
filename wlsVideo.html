@@ -1,4 +1,21 @@
 <div class="wlsvideo">
-  <video class="wlsvideoa" ng-show="{{showA}}" ng-src="{{srcA}}" controls="controls" autoplay> </video>
-  <video class="wlsvideob" ng-show="{{showB}}" ng-src="{{srcB}}" controls="controls" preload> </video>
+  <video class="wlsvideoa" 
+    ng-show="{{showA}}" 
+    ng-src="{{srcA}}" 
+    ng-attr-width="{{widthA}}" ng-attr-height="{{heightA}}" 
+    ng-attr-poster="{{posterA}}" 
+    wls-mute="{{muteA}}" 
+    wls-controls="{{ctrlA}}" 	
+    wls-param> 
+  </video>
+	
+  <video class="wlsvideob" 
+	ng-show="{{showB}}" 
+	ng-src="{{srcB}}" 
+	ng-attr-width="{{widthB}}" ng-attr-height="{{heightB}}" 
+	ng-attr-poster="{{posterB}}" 
+	wls-mute="{{muteB}}" 
+	wls-controls="{{ctrlB}}"			
+	wls-param> 
+  </video>
 </div>
