@@ -1,0 +1,23 @@
+<!doctype html>
+
+<html ng-app="webmLiveStreaming">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    
+    <title>WebM Live Streaming</title>
+
+    <!-- ionic/angularjs js -->
+    <script type="text/javascript" src="angular/angular.js"></script>
+    <script type="text/javascript" src="angular/angular-resource.js"></script>
+
+    <!-- webm live streaming js -->
+    <script type="text/javascript" src="wls.js"></script>
+</head>
+
+<body>
+    <wls-video ng-attr-src="/wls.json" ng-attr-type="application/json"> </wls-video>
+</body>
+
+</html>
