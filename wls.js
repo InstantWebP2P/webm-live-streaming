@@ -53,16 +53,15 @@ angular
 			// simple test case
 			$interval(function(){
 				var mute = $scope.muteA;
-				
 				$scope.muteA = $scope.muteB;
 				$scope.muteB = mute;
-				
+
 				var show = $scope.showA;
 				$scope.showA = $scope.showB;
 				$scope.showB = show;
 
 				var ctrl = $scope.ctrlA;
-				$scope.showA = $scope.ctrlB;
+				$scope.ctrlA = $scope.ctrlB;
 				$scope.ctrlB = ctrl;
 			}, 6000);
 			
@@ -81,6 +80,69 @@ angular
 		},
 
 		templateUrl: 'wlsVideo.html'
+		///template: '<p> webm live streaming container </p>'
+	};
+})
+.directive('wlsAudio', function() {
+	return {
+		restrict: 'E',
+		transclude: true,
+		replace: true,
+		scope: {},
+
+		controller: function($scope, $element, 
+				             $attrs, $transclude, $resource, $interval) {
+			$scope.indexUrl = '';
+			$scope.IndexCnt = {};
+			
+			$scope.srcA = '';
+			$scope.srcB = '';
+			$scope.muteA = false;
+			$scope.muteB = true;
+			$scope.ctrlA = false;
+			$scope.ctrlB = true;
+
+			
+			$scope.fetchIndexUrl = function(indexUrl) {
+				console.log('indexUrl:'+indexUrl);
+				
+				$scope.indexUrl = indexUrl;
+				
+				$resource(indexUrl)
+				.get({}, function(value){
+					$scope.IndexCnt = value;
+					
+					$scope.srcA = value.srcB;
+					$scope.srcB = value.srcA;
+				});
+			};
+			
+			// simple test case
+			$interval(function(){
+				var mute = $scope.muteA;
+				$scope.muteA = $scope.muteB;
+				$scope.muteB = mute;
+				
+				var ctrl = $scope.ctrlA;
+				$scope.ctrlA = $scope.ctrlB;
+				$scope.ctrlB = ctrl;
+			}, 6000);
+			
+		},
+		
+		link: function(scope, element, attrs) {
+			console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
+			
+			scope.fetchIndexUrl(attrs.src);
+			
+			// observe attribute to interpolated attribute
+			/*attrs.$observe('ngShow', function(value) {
+				console.log('ngShow has changed value to ' + value);
+				if (value) attrs.$set('ngShow', value);
+			});*/
+		},
+
+		templateUrl: 'wlsAudio.html'
 		///template: '<p> webm live streaming container </p>'
 	};
 })
