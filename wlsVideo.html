@@ -4,7 +4,8 @@
     ng-src="{{srcA}}" 
     ng-attr-width="{{widthA}}" ng-attr-height="{{heightA}}" 
     ng-attr-poster="{{posterA}}" 
-    wls-mute="{{muteA}}" 
+	wls-play="{{!muteA}}" 
+	wls-mute="{{muteA}}" 
     wls-controls="{{ctrlA}}" 	
     wls-param> 
   </video>
@@ -14,8 +15,10 @@
 	ng-src="{{srcB}}" 
 	ng-attr-width="{{widthB}}" ng-attr-height="{{heightB}}" 
 	ng-attr-poster="{{posterB}}" 
+	wls-play="{{!muteB}}" 
 	wls-mute="{{muteB}}" 
 	wls-controls="{{ctrlB}}"			
 	wls-param> 
   </video>
 </div>
+ 

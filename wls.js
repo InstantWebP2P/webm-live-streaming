@@ -1,3 +1,7 @@
+
+// templates
+
+// module,directive
 angular
 .module('webmLiveStreaming', ['ngResource'])
 ///.config(['$resourceProvider', function ($resourceProvider) {
@@ -82,12 +86,44 @@ angular
 })
 .directive('wlsPlay', function() {
 	return function(scope, element, attr) {
-		
+		// update property but attribute
+		function update(value){
+			if (value === 'true') {
+				element[0].play();
+			} else {
+				element[0].pause();
+			}
+		}
+
+		// check first time
+		update(attr.wlsPlay);
+
+		// observe attribute to interpolated attribute
+		attr.$observe('wlsPlay', function(value) {
+			console.log('wlsPlay has changed value to ' + value);
+			update(value);
+		});
 	};
 })
 .directive('wlsPause', function() {
 	return function(scope, element, attr) {
-		
+		// update property but attribute
+		function update(value){
+			if (value === 'true') {
+				element[0].pause();
+			} else {
+				element[0].play();
+			}
+		}
+
+		// check first time
+		update(attr.wlsPause);
+
+		// observe attribute to interpolated attribute
+		attr.$observe('wlsPause', function(value) {
+			console.log('wlsPause has changed value to ' + value);
+			update(value);
+		});
 	};
 })
 .directive('wlsMute', function() {
@@ -117,11 +153,9 @@ angular
 		// update property but attribute
 		function update(value){
 			if (value === 'true') {
-				if (!element.prop('autoplay'))
-					element.prop('autoplay', true);
+				element.prop('autoplay', true);
 			} else {
-				if (element.prop('autoplay'))
-					element.prop('autoplay', false);
+				element.prop('autoplay', false);
 			}
 		}
 
@@ -140,11 +174,9 @@ angular
 		// update property but attribute
 		function update(value){
 			if (value === 'true') {
-				if (!element.prop('preload'))
-					element.prop('preload', true);
+				element.prop('preload', true);
 			} else {
-				if (element.prop('preload'))
-					element.prop('preload', false);
+				element.prop('preload', false);
 			}
 		}
 		
@@ -184,11 +216,9 @@ angular
 		// update property but attribute
 		function update(value){
 			if (value === 'true') {
-				if (!element.prop('loop'))
-					element.prop('loop', true);
+				element.prop('loop', true);
 			} else {
-				if (element.prop('loop'))
-					element.prop('loop', false);
+				element.prop('loop', false);
 			}
 		}
 		
@@ -219,6 +249,8 @@ angular
 		///});
 		element.on('pause', function(){
 			console.log('play pause '+attr.class);
+			
+			///element[0].play();
 		});
 		element.on('error', function(){
 			console.log('play error '+attr.class);
