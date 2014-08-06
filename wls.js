@@ -493,7 +493,7 @@ angular
 		});
 	};
 })
-.directive('wlsParam', function() {
+.directive('wlsEvents', function() {
 	return function(scope, element, attr) {
 		// add event listener
 		element.on('play', function(){
@@ -539,30 +539,6 @@ angular
 		element.on('abort', function(){
 			console.log('play abort '+attr.class);
 		});
-				
-		/*
-		// fill initial parameters
-		
-		// watch on parameter changed
-		scope.$watch();
-		
-		// update attribute
-		function update(value){
-			if (value === 'true') {
-				element.attr('loop', 'loop')
-			} else {
-				element.removeAttr('loop');
-			}
-		}
-		
-		// check first time
-		update(attr.wlsLoop);
-
-		// observe attribute to interpolated attribute
-		attr.$observe('wlsLoop', function(value) {
-			console.log('wlsLoop has changed value to ' + value);
-			update(value);
-		});*/
 	};
 })
 .directive('wlsVideoBar', function() {
