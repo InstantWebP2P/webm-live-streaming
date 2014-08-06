@@ -22,7 +22,7 @@ angular
 			
 			$scope.srcA = '';
 			$scope.srcB = '';
-			$scope.showA = false;
+			$scope.showA = true;
 			$scope.showB = false;
 			$scope.widthA = 320;
 			$scope.heightA = 240;
@@ -31,14 +31,15 @@ angular
 			$scope.posterA = '';
 			$scope.posterB = '';
 			$scope.muteA = false;
-			$scope.muteB = false;
-			$scope.playA = false;
+			$scope.muteB = true;
+			$scope.playA = true;
 			$scope.playB = false;
 			$scope.preloadA = false;
-			$scope.preloadB = false;			
-			$scope.ctrlA = false;
-			$scope.ctrlB = false;
+			$scope.preloadB = true;			
+			$scope.ctrlA = true;
+			$scope.ctrlB = true;
 
+			
 			
 			$scope.fetchIndexUrl = function(indexUrl) {
 				console.log('indexUrl:'+indexUrl);
@@ -295,7 +296,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsShow', function(value) {
-			console.log('wlsShow has changed value to ' + value);
+			console.log(attr.class+' wlsShow has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -316,7 +317,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsPlay', function(value) {
-			console.log('wlsPlay has changed value to ' + value);
+			console.log(attr.class+' wlsPlay has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -337,7 +338,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsPause', function(value) {
-			console.log('wlsPause has changed value to ' + value);
+			console.log(attr.class+' wlsPause has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -359,7 +360,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsMute', function(value) {
-			console.log('wlsMute has changed value to ' + value);
+			console.log(attr.class+' wlsMute has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -380,7 +381,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsAutoPlay', function(value) {
-			console.log('wlsAutoPlay has changed value to ' + value);
+			console.log(attr.class+' wlsAutoPlay has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -401,7 +402,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsPreload', function(value) {
-			console.log('wlsPreload has changed value to ' + value);
+			console.log(attr.class+' wlsPreload has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -422,7 +423,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsControls', function(value) {
-			console.log('wlsControls has changed value to ' + value);
+			console.log(attr.class+' wlsControls has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -443,7 +444,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsLoop', function(value) {
-			console.log('wlsLoop has changed value to ' + value);
+			console.log(attr.class+' wlsLoop has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -462,11 +463,11 @@ angular
 		element.on('loadedmetadata', function(){
 			console.log('play loadedmetadata '+attr.class);
 		});
-		element.on('progress', function(){
+		/*element.on('progress', function(){
             ///console.log('play progress '+attr.class);
             console.log('networkState:'+JSON.stringify(element.prop('networkState')));
             console.log('played:'+JSON.stringify(element.prop('played')));
-		});
+		});*/
 		element.on('pause', function(){
 			console.log('play pause '+attr.class);
 			
