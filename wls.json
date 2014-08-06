@@ -1,4 +1,15 @@
 {
-    "srcA": "/medias/face.webm",
-    "srcB": "/medias/oceans.webm"
+    "playlist_length": 10,
+    "playlist": [
+	   "/medias/face.webm",
+	   "/medias/oceans.webm",
+	   "/medias/face.webm",
+	   "/medias/oceans.webm",
+	   "/medias/face.webm",
+	   "/medias/oceans.webm",
+	   "/medias/face.webm",
+	   "/medias/oceans.webm",
+	   "/medias/face.webm",
+	   "/medias/oceans.webm"
+    ]
 }
