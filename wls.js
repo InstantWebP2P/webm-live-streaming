@@ -26,12 +26,12 @@ angular
 			$scope.showB = false;
 			$scope.widthA = 320;
 			$scope.heightA = 240;
-			$scope.widthB = 320;
-			$scope.heightB = 240;
+			$scope.widthB = 640;
+			$scope.heightB = 480;
 			$scope.posterA = '';
 			$scope.posterB = '';
 			$scope.muteA = false;
-			$scope.muteB = true;
+			$scope.muteB = false;
 			$scope.playA = true;
 			$scope.playB = false;
 			$scope.preloadA = false;
@@ -53,11 +53,11 @@ angular
 					///$scope.srcA = value.srcB;
 					///$scope.srcB = value.srcA;
 					// start streaming
-					$scope.streamingLSM($scope, 'start');
+					$scope.streamingFSM('start');
 				});
 			};
 			
-			// streaming LSM
+			// streaming FSM
 			// input event, return action
 			// event: 
 			// - start, 
@@ -70,21 +70,20 @@ angular
 			// action:
 			// - start play on videoA and preload on videoB
 			// - switch-over between videoA and videoB
-			$scope.streamingLSM = function($scope, event) {
+			$scope.streamingFSM = function(event) {
 				$scope.lsm = $scope.lsm || {};
 				var pl  = $scope.lsm.playlist = $scope.IndexCnt.playlist;
 				var pll = $scope.lsm.playlist_length = $scope.IndexCnt.playlist_length;
 				$scope.lsm.current = $scope.lsm.current || 0;
-				var cur = $scope.lsm.current;
 								
 				switch(event) {
 				case 'start':
 					// initial index
-				    cur = 0;
+					$scope.lsm.current = 0;
                     
 					// fill video src
-					$scope.srcA = pl[cur++];
-					$scope.srcB = pl[cur++];
+					$scope.srcA = pl[$scope.lsm.current++];
+					$scope.srcB = pl[$scope.lsm.current++];
                     console.log('ev start, current:'+$scope.lsm.current);
                     
                     // play videoA while preload videoB
@@ -110,8 +109,8 @@ angular
 					
 				case 'wlsvideoa_ended':
 					// check playlist length
-					if (cur === pll) {
-						$scope.streamingLSM('stop');
+					if ($scope.lsm.current === pll) {
+						$scope.streamingFSM('stop');
 						console.log('ev videoa_ended, playlist done, trigger stop event');
 					} else {
 						if ($scope.lsm.a_played) {
@@ -125,8 +124,9 @@ angular
 
 								// play videoB, reset videoA's src and preload videoA
 								$scope.playB = true;
+								$scope.playA = false;
 
-								$scope.srcA = pl[cur++];
+								$scope.srcA = pl[$scope.lsm.current++];
 								$scope.preloadA = true;
 								$scope.videoa_preloading = true;
 								console.log('ev videoa_ended, current:'+$scope.lsm.current);
@@ -145,8 +145,8 @@ angular
 					
 				case 'wlsvideob_ended':
 					// check playlist length
-					if (cur === pll) {
-						$scope.streamingLSM('stop');
+					if ($scope.lsm.current === pll) {
+						$scope.streamingFSM('stop');
 						console.log('ev videob_ended, playlist done, trigger stop event');
 					} else {
 						if ($scope.lsm.b_played) {
@@ -160,8 +160,9 @@ angular
 
 								// play videoA, reset videoB's src and preload videoB
 								$scope.playA = true;
+								$scope.playB = false;
 
-								$scope.srcB = pl[cur++];
+								$scope.srcB = pl[$scope.lsm.current++];
 								$scope.preloadB = true;
 								$scope.videob_preloading = true;
 								console.log('ev videob_ended, current:'+$scope.lsm.current);
@@ -171,7 +172,7 @@ angular
 						} else {
 							console.log('ev videob_ended: invalid operation');
 						}
-					}
+					}				
 					break;
 					
 				case 'stop':
@@ -183,7 +184,7 @@ angular
 					break;
 				}
 			};
-			
+						
 			// simple test case
 			/*$interval(function(){
 				var mute = $scope.muteA;
@@ -203,13 +204,35 @@ angular
 		
 		link: function(scope, element, attrs) {
 			console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
-			
+
 			scope.fetchIndexUrl(attrs.src);
-			
-			// observe attribute to interpolated attribute
-			/*attrs.$observe('ngShow', function(value) {
-				console.log('ngShow has changed value to ' + value);
-				if (value) attrs.$set('ngShow', value);
+
+			// watch on scope
+			/*scope.$watch('srcA', function(newValue, oldValue) {
+				if (newValue)
+					console.log("data changed: "+newValue);
+			});
+			scope.$watch('srcB', function(newValue, oldValue) {
+				if (newValue)
+					console.log("data changed: "+newValue);
+			});
+
+			scope.$watch('showA', function(newValue, oldValue) {
+				if (newValue)
+					console.log("data changed: "+newValue);
+			});
+			scope.$watch('showB', function(newValue, oldValue) {
+				if (newValue)
+					console.log("data changed: "+newValue);
+			});
+
+			scope.$watch('playA', function(newValue, oldValue) {
+				if (newValue)
+					console.log("data changed: "+newValue);
+			});
+			scope.$watch('playB', function(newValue, oldValue) {
+				if (newValue)
+					console.log("data changed: "+newValue);
 			});*/
 		},
 
@@ -454,11 +477,21 @@ angular
 		// add event listener
 		element.on('play', function(){
 			console.log('play '+attr.class);
-			scope.streamingLSM(scope, attr.class+'_played');
+			
+			// update FSM
+			scope.streamingFSM(attr.class+'_played');
+			
+			// sync data
+			scope.$apply();
 		});
 		element.on('ended', function(){
 			console.log('play ended '+attr.class);
-			scope.streamingLSM(scope, attr.class+'_ended');
+			
+			// update FSM
+			scope.streamingFSM(attr.class+'_ended');
+
+			// sync data
+			scope.$apply();
 		});
 		element.on('loadedmetadata', function(){
 			console.log('play loadedmetadata '+attr.class);
