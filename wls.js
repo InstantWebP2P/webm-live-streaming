@@ -16,10 +16,10 @@ angular
 		scope: {},
 
 		controller: function($scope, $element, 
-				             $attrs, $transclude, $resource, $interval) {
+				$attrs, $transclude, $resource, $interval) {
 			$scope.indexUrl = '';
 			$scope.IndexCnt = {};
-			
+
 			$scope.srcA = '';
 			$scope.srcB = '';
 			$scope.showA = true;
@@ -39,24 +39,24 @@ angular
 			$scope.ctrlA = true;
 			$scope.ctrlB = true;
 
-			
-			
+
+
 			$scope.fetchIndexUrl = function(indexUrl) {
 				console.log('indexUrl:'+indexUrl);
-				
+
 				$scope.indexUrl = indexUrl;
-				
+
 				$resource(indexUrl)
 				.get({}, function(value){
 					$scope.IndexCnt = value;
-					
+
 					///$scope.srcA = value.srcB;
 					///$scope.srcB = value.srcA;
 					// start streaming
 					$scope.streamingFSM('start');
 				});
 			};
-			
+
 			// streaming FSM
 			// input event, return action
 			// event: 
@@ -75,13 +75,13 @@ angular
 				var pl  = $scope.fsm.playlist = $scope.IndexCnt.playlist;
 				var pll = $scope.fsm.playlist_length = $scope.IndexCnt.playlist_length;
 				$scope.fsm.current = $scope.fsm.current || 0;
-							
+
 				// check playlist length
 				if (pll === 0) {
 					console.log('no video files');
 					return;
 				}
-				
+
 				switch(event) {
 				case 'start':
 					// initial index
@@ -92,30 +92,30 @@ angular
 					$scope.srcA = pl[$scope.fsm.current++];
 					if ($scope.fsm.current === pll) {
 						$scope.showA = true;
-                    	$scope.preloadA = false;
-                    	$scope.muteA = false;
+						$scope.preloadA = false;
+						$scope.muteA = false;
 						$scope.playA = true;
 
 						console.log('ev start, single video file');
 					} else {
 						$scope.srcB = pl[$scope.fsm.current++];
-						
-						$scope.muteB = true;
-                    	$scope.showB = false;
-                    	$scope.playB = false;
-                    	$scope.preloadB = true;
-                    	$scope.videob_preloading = true;
-					}
-                    console.log('ev start, current:'+$scope.fsm.current);
 
-                    // set start flag
+						$scope.muteB = true;
+						$scope.showB = false;
+						$scope.playB = false;
+						$scope.preloadB = true;
+						$scope.videob_preloading = true;
+					}
+					console.log('ev start, current:'+$scope.fsm.current);
+
+					// set start flag
 					$scope.fsm.started = true;
 					break;
-					
+
 				case 'wlsvideoa_played':
 					$scope.fsm.a_played = true;
 					break;
-					
+
 				case 'wlsvideoa_ended':
 					// check playlist length
 					if ($scope.fsm.current === pll) {
@@ -132,18 +132,18 @@ angular
 								$scope.showB = true;
 
 								// mute videoA, un-mute videoB
-		                    	$scope.muteA = true;
-		                    	$scope.muteB = false;
-								
+								$scope.muteA = true;
+								$scope.muteB = false;
+
 								// play videoB, reset videoA's src and preload videoA
-		                    	$scope.preloadB = false;
+								$scope.preloadB = false;
 								$scope.playB = true;
-								
+
 								$scope.playA = false;
 								$scope.srcA = pl[$scope.fsm.current++];
 								$scope.preloadA = true;
 								$scope.videoa_preloading = true;
-								
+
 								console.log('ev videoa_ended, current:'+$scope.fsm.current);
 							} else {
 								console.log('ev videoa_ended: invalid operation');
@@ -153,11 +153,11 @@ angular
 						}
 					}
 					break;
-					
+
 				case 'wlsvideob_played':
 					$scope.fsm.b_played = true;
 					break;
-					
+
 				case 'wlsvideob_ended':
 					// check playlist length
 					if ($scope.fsm.current === pll) {
@@ -174,18 +174,18 @@ angular
 								$scope.showA = true;
 
 								// mute videoA, un-mute videoB
-		                    	$scope.muteB = true;
-		                    	$scope.muteA = false;
-		                    	
+								$scope.muteB = true;
+								$scope.muteA = false;
+
 								// play videoA, reset videoB's src and preload videoB
 								$scope.preloadA = false;
 								$scope.playA = true;
-								
+
 								$scope.playB = false;
 								$scope.srcB = pl[$scope.fsm.current++];
 								$scope.preloadB = true;
 								$scope.videob_preloading = true;
-								
+
 								console.log('ev videob_ended, current:'+$scope.fsm.current);
 							} else {
 								console.log('ev videob_ended: invalid operation');
@@ -195,17 +195,17 @@ angular
 						}
 					}				
 					break;
-					
+
 				case 'stop':
-                    // set stop flag
+					// set stop flag
 					$scope.fsm.stopped = true;
 					break;
-					
+
 				default:
 					break;
 				}
 			};
-						
+
 			// simple test case
 			/*$interval(function(){
 				var mute = $scope.muteA;
@@ -220,9 +220,9 @@ angular
 				$scope.ctrlA = $scope.ctrlB;
 				$scope.ctrlB = ctrl;
 			}, 6000);*/
-			
+
 		},
-		
+
 		link: function(scope, element, attrs) {
 			console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
 
@@ -269,10 +269,10 @@ angular
 		scope: {},
 
 		controller: function($scope, $element, 
-				             $attrs, $transclude, $resource, $interval) {
+				$attrs, $transclude, $resource, $interval) {
 			$scope.indexUrl = '';
 			$scope.IndexCnt = {};
-			
+
 			$scope.srcA = '';
 			$scope.srcB = '';
 			$scope.muteA = false;
@@ -280,39 +280,39 @@ angular
 			$scope.ctrlA = false;
 			$scope.ctrlB = true;
 
-			
+
 			$scope.fetchIndexUrl = function(indexUrl) {
 				console.log('indexUrl:'+indexUrl);
-				
+
 				$scope.indexUrl = indexUrl;
-				
+
 				$resource(indexUrl)
 				.get({}, function(value){
 					$scope.IndexCnt = value;
-					
+
 					$scope.srcA = value.srcB;
 					$scope.srcB = value.srcA;
 				});
 			};
-			
+
 			// simple test case
 			/*$interval(function(){
 				var mute = $scope.muteA;
 				$scope.muteA = $scope.muteB;
 				$scope.muteB = mute;
-				
+
 				var ctrl = $scope.ctrlA;
 				$scope.ctrlA = $scope.ctrlB;
 				$scope.ctrlB = ctrl;
 			}, 6000);*/
-			
+
 		},
-		
+
 		link: function(scope, element, attrs) {
 			console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
-			
+
 			scope.fetchIndexUrl(attrs.src);
-			
+
 			// observe attribute to interpolated attribute
 			/*attrs.$observe('ngShow', function(value) {
 				console.log('ngShow has changed value to ' + value);
@@ -440,7 +440,7 @@ angular
 				element.prop('preload', false);
 			}
 		}
-		
+
 		// check first time
 		update(attr.wlsPreload);
 
@@ -461,7 +461,7 @@ angular
 				element.prop('controls', false);
 			}
 		}
-		
+
 		// check first time
 		update(attr.wlsControls);
 
@@ -482,7 +482,7 @@ angular
 				element.prop('loop', false);
 			}
 		}
-		
+
 		// check first time
 		update(attr.wlsLoop);
 
@@ -498,21 +498,21 @@ angular
 		// add event listener
 		element.on('play', function(){
 			console.log('play '+attr.class);
-			
-			// update FSM
-			scope.streamingFSM(attr.class+'_played');
-			
+
 			// sync data
-			scope.$apply();
+			scope.$apply(function(){
+				// update FSM
+				scope.streamingFSM(attr.class+'_played');
+			});
 		});
 		element.on('ended', function(){
 			console.log('play ended '+attr.class);
-			
-			// update FSM
-			scope.streamingFSM(attr.class+'_ended');
 
 			// sync data
-			scope.$apply();
+			scope.$apply(function(){
+				// update FSM
+				scope.streamingFSM(attr.class+'_ended');
+			});
 		});
 		element.on('loadedmetadata', function(){
 			console.log('play loadedmetadata '+attr.class);
@@ -524,7 +524,7 @@ angular
 		});*/
 		element.on('pause', function(){
 			console.log('play pause '+attr.class);
-			
+
 			///element[0].play();
 		});
 		element.on('error', function(){
@@ -550,10 +550,10 @@ angular
 		scope: {},
 
 		controller: function($scope, $element, 
-				             $attrs, $transclude, $resource, $interval) {
+				$attrs, $transclude, $resource, $interval) {
 			$scope.indexUrl = '';
 			$scope.IndexCnt = {};
-			
+
 			$scope.srcA = '';
 			$scope.srcB = '';
 			$scope.muteA = false;
@@ -561,39 +561,39 @@ angular
 			$scope.ctrlA = false;
 			$scope.ctrlB = true;
 
-			
+
 			$scope.fetchIndexUrl = function(indexUrl) {
 				console.log('indexUrl:'+indexUrl);
-				
+
 				$scope.indexUrl = indexUrl;
-				
+
 				$resource(indexUrl)
 				.get({}, function(value){
 					$scope.IndexCnt = value;
-					
+
 					$scope.srcA = value.srcB;
 					$scope.srcB = value.srcA;
 				});
 			};
-			
+
 			// simple test case
 			$interval(function(){
 				var mute = $scope.muteA;
 				$scope.muteA = $scope.muteB;
 				$scope.muteB = mute;
-				
+
 				var ctrl = $scope.ctrlA;
 				$scope.ctrlA = $scope.ctrlB;
 				$scope.ctrlB = ctrl;
 			}, 6000);
-			
+
 		},
-		
+
 		link: function(scope, element, attrs) {
 			console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
-			
+
 			scope.fetchIndexUrl(attrs.src);
-			
+
 			// observe attribute to interpolated attribute
 			/*attrs.$observe('ngShow', function(value) {
 				console.log('ngShow has changed value to ' + value);
