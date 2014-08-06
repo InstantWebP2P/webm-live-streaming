@@ -65,56 +65,65 @@ angular
 			// - videoa_ended, 
 			// - videob_played, 
 			// - videob_ended, 
-			// - stream_ended, 
+			// - stream_ended, for live stream
 			// - stop
 			// action:
 			// - start play on videoA and preload on videoB
 			// - switch-over between videoA and videoB
 			$scope.streamingFSM = function(event) {
-				$scope.lsm = $scope.lsm || {};
-				var pl  = $scope.lsm.playlist = $scope.IndexCnt.playlist;
-				var pll = $scope.lsm.playlist_length = $scope.IndexCnt.playlist_length;
-				$scope.lsm.current = $scope.lsm.current || 0;
-								
+				$scope.fsm = $scope.fsm || {};
+				var pl  = $scope.fsm.playlist = $scope.IndexCnt.playlist;
+				var pll = $scope.fsm.playlist_length = $scope.IndexCnt.playlist_length;
+				$scope.fsm.current = $scope.fsm.current || 0;
+							
+				// check playlist length
+				if (pll === 0) {
+					console.log('no video files');
+					return;
+				}
+				
 				switch(event) {
 				case 'start':
 					// initial index
-					$scope.lsm.current = 0;
-                    
+					$scope.fsm.current = 0;
+
 					// fill video src
-					$scope.srcA = pl[$scope.lsm.current++];
-					$scope.srcB = pl[$scope.lsm.current++];
-                    console.log('ev start, current:'+$scope.lsm.current);
-                    
-                    // play videoA while preload videoB
-                    {
-                    	// show videoA, hide videoB
+					// play videoA, preload videoB
+					$scope.srcA = pl[$scope.fsm.current++];
+					if ($scope.fsm.current === pll) {
+						$scope.showA = true;
+                    	$scope.preloadA = false;
+                    	$scope.muteA = false;
+						$scope.playA = true;
+
+						console.log('ev start, single video file');
+					} else {
+						$scope.srcB = pl[$scope.fsm.current++];
+						
+						$scope.muteB = true;
                     	$scope.showB = false;
-                    	$scope.showA = true;
-                        
-                    	// play videoA, preload videoB
-                    	$scope.playA = true;
-                    	
+                    	$scope.playB = false;
                     	$scope.preloadB = true;
                     	$scope.videob_preloading = true;
-                    }
-                    
+					}
+                    console.log('ev start, current:'+$scope.fsm.current);
+
                     // set start flag
-					$scope.lsm.started = true;
+					$scope.fsm.started = true;
 					break;
 					
 				case 'wlsvideoa_played':
-					$scope.lsm.a_played = true;
+					$scope.fsm.a_played = true;
 					break;
 					
 				case 'wlsvideoa_ended':
 					// check playlist length
-					if ($scope.lsm.current === pll) {
+					if ($scope.fsm.current === pll) {
 						$scope.streamingFSM('stop');
 						console.log('ev videoa_ended, playlist done, trigger stop event');
 					} else {
-						if ($scope.lsm.a_played) {
-							$scope.lsm.a_played = false;
+						if ($scope.fsm.a_played) {
+							$scope.fsm.a_played = false;
 
 							// switch over
 							if ($scope.videob_preloading) {
@@ -122,14 +131,20 @@ angular
 								$scope.showA = false;
 								$scope.showB = true;
 
+								// mute videoA, un-mute videoB
+		                    	$scope.muteA = true;
+		                    	$scope.muteB = false;
+								
 								// play videoB, reset videoA's src and preload videoA
+		                    	$scope.preloadB = false;
 								$scope.playB = true;
+								
 								$scope.playA = false;
-
-								$scope.srcA = pl[$scope.lsm.current++];
+								$scope.srcA = pl[$scope.fsm.current++];
 								$scope.preloadA = true;
 								$scope.videoa_preloading = true;
-								console.log('ev videoa_ended, current:'+$scope.lsm.current);
+								
+								console.log('ev videoa_ended, current:'+$scope.fsm.current);
 							} else {
 								console.log('ev videoa_ended: invalid operation');
 							}
@@ -140,17 +155,17 @@ angular
 					break;
 					
 				case 'wlsvideob_played':
-					$scope.lsm.b_played = true;
+					$scope.fsm.b_played = true;
 					break;
 					
 				case 'wlsvideob_ended':
 					// check playlist length
-					if ($scope.lsm.current === pll) {
+					if ($scope.fsm.current === pll) {
 						$scope.streamingFSM('stop');
 						console.log('ev videob_ended, playlist done, trigger stop event');
 					} else {
-						if ($scope.lsm.b_played) {
-							$scope.lsm.b_played = false;
+						if ($scope.fsm.b_played) {
+							$scope.fsm.b_played = false;
 
 							// switch over
 							if ($scope.videoa_preloading) {
@@ -158,14 +173,20 @@ angular
 								$scope.showB = false;
 								$scope.showA = true;
 
+								// mute videoA, un-mute videoB
+		                    	$scope.muteB = true;
+		                    	$scope.muteA = false;
+		                    	
 								// play videoA, reset videoB's src and preload videoB
+								$scope.preloadA = false;
 								$scope.playA = true;
+								
 								$scope.playB = false;
-
-								$scope.srcB = pl[$scope.lsm.current++];
+								$scope.srcB = pl[$scope.fsm.current++];
 								$scope.preloadB = true;
 								$scope.videob_preloading = true;
-								console.log('ev videob_ended, current:'+$scope.lsm.current);
+								
+								console.log('ev videob_ended, current:'+$scope.fsm.current);
 							} else {
 								console.log('ev videob_ended: invalid operation');
 							}
@@ -177,7 +198,7 @@ angular
 					
 				case 'stop':
                     // set stop flag
-					$scope.lsm.stopped = true;
+					$scope.fsm.stopped = true;
 					break;
 					
 				default:
