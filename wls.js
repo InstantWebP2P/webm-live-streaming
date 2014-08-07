@@ -26,8 +26,8 @@ angular
 			$scope.showB = false;
 			$scope.widthA = 320;
 			$scope.heightA = 240;
-			$scope.widthB = 640;
-			$scope.heightB = 480;
+			$scope.widthB = 320;
+			$scope.heightB = 240;
 			$scope.posterA = '';
 			$scope.posterB = '';
 			$scope.muteA = false;
@@ -36,8 +36,8 @@ angular
 			$scope.playB = false;
 			$scope.preloadA = false;
 			$scope.preloadB = true;			
-			$scope.ctrlA = true;
-			$scope.ctrlB = true;
+			$scope.ctrlA = false;
+			$scope.ctrlB = false;
 
 
 
@@ -146,10 +146,10 @@ angular
 
 								console.log('ev videoa_ended, current:'+$scope.fsm.current);
 							} else {
-								console.log('ev videoa_ended: invalid operation');
+								console.log('ev videoa_ended: invalid operation 1');
 							}
 						} else {
-							console.log('ev videoa_ended: invalid operation');
+							console.log('ev videoa_ended: invalid operation 2');
 						}
 					}
 					break;
@@ -188,10 +188,10 @@ angular
 
 								console.log('ev videob_ended, current:'+$scope.fsm.current);
 							} else {
-								console.log('ev videob_ended: invalid operation');
+								console.log('ev videob_ended: invalid operation 1');
 							}
 						} else {
-							console.log('ev videob_ended: invalid operation');
+							console.log('ev videob_ended: invalid operation 2');
 						}
 					}				
 					break;

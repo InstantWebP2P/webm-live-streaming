@@ -1,15 +1,22 @@
 {
-    "playlist_length": 10,
+    "mime": "video/webm",
+    "playlist_length": 16,
     "playlist": [
-       "/medias/oceans.webm",
-	   "/medias/oceans.webm",
-       "/medias/oceans.webm",
-	   "/medias/oceans.webm",
-       "/medias/oceans.webm",
-	   "/medias/oceans.webm",
-	   "/medias/face.webm",
-	   "/medias/oceans.webm",
-	   "/medias/face.webm",
-	   "/medias/oceans.webm"
+       "/medias/wlsa_000.webm",
+       "/medias/wlsa_001.webm",
+       "/medias/wlsa_002.webm",
+       "/medias/wlsa_003.webm",
+       "/medias/wlsa_004.webm",
+       "/medias/wlsa_005.webm",
+       "/medias/wlsa_006.webm",
+       "/medias/wlsa_007.webm",
+       "/medias/wlsa_008.webm",
+       "/medias/wlsa_009.webm",
+       "/medias/wlsa_010.webm",
+       "/medias/wlsa_011.webm",
+       "/medias/wlsa_012.webm",
+       "/medias/wlsa_013.webm",
+       "/medias/wlsa_014.webm",
+       "/medias/wlsa_015.webm"
     ]
 }
