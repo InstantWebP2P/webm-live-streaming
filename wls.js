@@ -8,6 +8,9 @@ angular
 ///	// Don't strip trailing slashes from calculated URLs
 ///	$resourceProvider.defaults.stripTrailingSlashes = false;
 ///}])
+.config(['$logProvider', function($logProvider){
+    $logProvider.debugEnabled(true);
+}])
 .directive('wlsVideo', function() {
 	return {
 		restrict: 'E',
@@ -16,7 +19,7 @@ angular
 		scope: {},
 
 		controller: function($scope, $element, 
-				$attrs, $transclude, $resource, $interval) {
+				$attrs, $transclude, $resource, $interval, $log) {
 			$scope.indexUrl = '';
 			$scope.IndexCnt = {};
 
@@ -42,7 +45,7 @@ angular
 
 
 			$scope.fetchIndexUrl = function(indexUrl) {
-				console.log('indexUrl:'+indexUrl);
+				$log.debug('indexUrl:'+indexUrl);
 
 				$scope.indexUrl = indexUrl;
 
@@ -78,7 +81,7 @@ angular
 
 				// check playlist length
 				if (pll === 0) {
-					console.log('no video files');
+					$log.debug('no video files');
 					return;
 				}
 
@@ -96,7 +99,7 @@ angular
 						$scope.muteA = false;
 						$scope.playA = true;
 
-						console.log('ev start, single video file');
+						$log.debug('ev start, single video file');
 					} else {
 						$scope.srcB = pl[$scope.fsm.current++];
 						
@@ -106,7 +109,7 @@ angular
 						$scope.preloadB = true;
 						$scope.videob_preloading = true;
 					}
-					console.log('ev start, current:'+$scope.fsm.current);
+					$log.debug('ev start, current:'+$scope.fsm.current);
 
 					// set start flag
 					$scope.fsm.started = true;
@@ -120,7 +123,7 @@ angular
 					// check playlist length
 					if ($scope.fsm.current === pll) {
 						$scope.streamingFSM('stop');
-						console.log('ev videoa_ended, playlist done, trigger stop event');
+						$log.debug('ev videoa_ended, playlist done, trigger stop event');
 					} else {
 						if ($scope.fsm.a_played) {
 							$scope.fsm.a_played = false;
@@ -144,12 +147,12 @@ angular
 								$scope.preloadA = true;
 								$scope.videoa_preloading = true;
 
-								console.log('ev videoa_ended, current:'+$scope.fsm.current);
+								$log.debug('ev videoa_ended, current:'+$scope.fsm.current);
 							} else {
-								console.log('ev videoa_ended: invalid operation 1');
+								$log.debug('ev videoa_ended: invalid operation 1');
 							}
 						} else {
-							console.log('ev videoa_ended: invalid operation 2');
+							$log.debug('ev videoa_ended: invalid operation 2');
 						}
 					}
 					break;
@@ -162,7 +165,7 @@ angular
 					// check playlist length
 					if ($scope.fsm.current === pll) {
 						$scope.streamingFSM('stop');
-						console.log('ev videob_ended, playlist done, trigger stop event');
+						$log.debug('ev videob_ended, playlist done, trigger stop event');
 					} else {
 						if ($scope.fsm.b_played) {
 							$scope.fsm.b_played = false;
@@ -186,12 +189,12 @@ angular
 								$scope.preloadB = true;
 								$scope.videob_preloading = true;
 
-								console.log('ev videob_ended, current:'+$scope.fsm.current);
+								$log.debug('ev videob_ended, current:'+$scope.fsm.current);
 							} else {
-								console.log('ev videob_ended: invalid operation 1');
+								$log.debug('ev videob_ended: invalid operation 1');
 							}
 						} else {
-							console.log('ev videob_ended: invalid operation 2');
+							$log.debug('ev videob_ended: invalid operation 2');
 						}
 					}				
 					break;
@@ -224,36 +227,36 @@ angular
 		},
 
 		link: function(scope, element, attrs) {
-			console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
+			///console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
 
 			scope.fetchIndexUrl(attrs.src);
 
 			// watch on scope
 			/*scope.$watch('srcA', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});
 			scope.$watch('srcB', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});
 
 			scope.$watch('showA', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});
 			scope.$watch('showB', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});
 
 			scope.$watch('playA', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});
 			scope.$watch('playB', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});*/
 		},
 
@@ -269,7 +272,7 @@ angular
 		scope: {},
 
 		controller: function($scope, $element, 
-				$attrs, $transclude, $resource, $interval) {
+				$attrs, $transclude, $resource, $interval, $log) {
 			$scope.indexUrl = '';
 			$scope.IndexCnt = {};
 
@@ -289,7 +292,7 @@ angular
 
 
 			$scope.fetchIndexUrl = function(indexUrl) {
-				console.log('indexUrl:'+indexUrl);
+				$log.debug('indexUrl:'+indexUrl);
 
 				$scope.indexUrl = indexUrl;
 
@@ -325,7 +328,7 @@ angular
 
 				// check playlist length
 				if (pll === 0) {
-					console.log('no audio files');
+					$log.debug('no audio files');
 					return;
 				}
 
@@ -343,7 +346,7 @@ angular
 						$scope.muteA = false;
 						$scope.playA = true;
 
-						console.log('ev start, single audio file');
+						$log.debug('ev start, single audio file');
 					} else {
 						$scope.srcB = pl[$scope.fsm.current++];
 						
@@ -353,7 +356,7 @@ angular
 						$scope.preloadB = true;
 						$scope.audiob_preloading = true;
 					}
-					console.log('ev start, current:'+$scope.fsm.current);
+					$log.debug('ev start, current:'+$scope.fsm.current);
 
 					// set start flag
 					$scope.fsm.started = true;
@@ -367,7 +370,7 @@ angular
 					// check playlist length
 					if ($scope.fsm.current === pll) {
 						$scope.streamingFSM('stop');
-						console.log('ev audioa_ended, playlist done, trigger stop event');
+						$log.debug('ev audioa_ended, playlist done, trigger stop event');
 					} else {
 						if ($scope.fsm.a_played) {
 							$scope.fsm.a_played = false;
@@ -391,12 +394,12 @@ angular
 								$scope.preloadA = true;
 								$scope.audioa_preloading = true;
 
-								console.log('ev audioa_ended, current:'+$scope.fsm.current);
+								$log.debug('ev audioa_ended, current:'+$scope.fsm.current);
 							} else {
-								console.log('ev audioa_ended: invalid operation 1');
+								$log.debug('ev audioa_ended: invalid operation 1');
 							}
 						} else {
-							console.log('ev audioa_ended: invalid operation 2');
+							$log.debug('ev audioa_ended: invalid operation 2');
 						}
 					}
 					break;
@@ -409,7 +412,7 @@ angular
 					// check playlist length
 					if ($scope.fsm.current === pll) {
 						$scope.streamingFSM('stop');
-						console.log('ev audiob_ended, playlist done, trigger stop event');
+						$log.debug('ev audiob_ended, playlist done, trigger stop event');
 					} else {
 						if ($scope.fsm.b_played) {
 							$scope.fsm.b_played = false;
@@ -433,12 +436,12 @@ angular
 								$scope.preloadB = true;
 								$scope.audiob_preloading = true;
 
-								console.log('ev audiob_ended, current:'+$scope.fsm.current);
+								$log.debug('ev audiob_ended, current:'+$scope.fsm.current);
 							} else {
-								console.log('ev audiob_ended: invalid operation 1');
+								$log.debug('ev audiob_ended: invalid operation 1');
 							}
 						} else {
-							console.log('ev audiob_ended: invalid operation 2');
+							$log.debug('ev audiob_ended: invalid operation 2');
 						}
 					}				
 					break;
@@ -467,27 +470,27 @@ angular
 		},
 
 		link: function(scope, element, attrs) {
-			console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
+			///console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
 
 			scope.fetchIndexUrl(attrs.src);
 
 			// watch on scope
 			/*scope.$watch('srcA', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});
 			scope.$watch('srcB', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});
 
 			scope.$watch('playA', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});
 			scope.$watch('playB', function(newValue, oldValue) {
 				if (newValue)
-					console.log("data changed: "+newValue);
+					$log.debug("data changed: "+newValue);
 			});*/
 		},
 
@@ -511,7 +514,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsShow', function(value) {
-			console.log(attr.class+' wlsShow has changed value to ' + value);
+			///console.log(attr.class+' wlsShow has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -532,7 +535,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsPlay', function(value) {
-			console.log(attr.class+' wlsPlay has changed value to ' + value);
+			///console.log(attr.class+' wlsPlay has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -553,7 +556,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsPause', function(value) {
-			console.log(attr.class+' wlsPause has changed value to ' + value);
+			///console.log(attr.class+' wlsPause has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -575,7 +578,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsMute', function(value) {
-			console.log(attr.class+' wlsMute has changed value to ' + value);
+			///console.log(attr.class+' wlsMute has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -596,7 +599,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsAutoPlay', function(value) {
-			console.log(attr.class+' wlsAutoPlay has changed value to ' + value);
+			///console.log(attr.class+' wlsAutoPlay has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -617,7 +620,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsPreload', function(value) {
-			console.log(attr.class+' wlsPreload has changed value to ' + value);
+			///console.log(attr.class+' wlsPreload has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -638,7 +641,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsControls', function(value) {
-			console.log(attr.class+' wlsControls has changed value to ' + value);
+			///console.log(attr.class+' wlsControls has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -659,7 +662,7 @@ angular
 
 		// observe attribute to interpolated attribute
 		attr.$observe('wlsLoop', function(value) {
-			console.log(attr.class+' wlsLoop has changed value to ' + value);
+			///console.log(attr.class+' wlsLoop has changed value to ' + value);
 			update(value);
 		});
 	};
@@ -668,7 +671,7 @@ angular
 	return function(scope, element, attr) {
 		// add event listener
 		element.on('play', function(){
-			console.log('play '+attr.class);
+			///console.log('play '+attr.class);
 
 			// sync data
 			scope.$apply(function(){
@@ -677,7 +680,7 @@ angular
 			});
 		});
 		element.on('ended', function(){
-			console.log('play ended '+attr.class);
+			///console.log('play ended '+attr.class);
 
 			// sync data
 			scope.$apply(function(){
@@ -686,29 +689,29 @@ angular
 			});
 		});
 		element.on('loadedmetadata', function(){
-			console.log('play loadedmetadata '+attr.class);
+			///console.log('play loadedmetadata '+attr.class);
 		});
 		/*element.on('progress', function(){
-            ///console.log('play progress '+attr.class);
-            console.log('networkState:'+JSON.stringify(element.prop('networkState')));
-            console.log('played:'+JSON.stringify(element.prop('played')));
+            ///$log.debug('play progress '+attr.class);
+            $log.debug('networkState:'+JSON.stringify(element.prop('networkState')));
+            $log.debug('played:'+JSON.stringify(element.prop('played')));
 		});*/
 		element.on('pause', function(){
-			console.log('play pause '+attr.class);
+			///console.log('play pause '+attr.class);
 
 			///element[0].play();
 		});
 		element.on('error', function(){
-			console.log('play error '+attr.class);
+			///console.log('play error '+attr.class);
 		});
 		element.on('waiting', function(){
-			console.log('play waiting '+attr.class);
+			///console.log('play waiting '+attr.class);
 		});
 		element.on('empty', function(){
-			console.log('play empty '+attr.class);
+			///console.log('play empty '+attr.class);
 		});
 		element.on('abort', function(){
-			console.log('play abort '+attr.class);
+			///console.log('play abort '+attr.class);
 		});
 	};
 })
@@ -734,7 +737,7 @@ angular
 
 
 			$scope.fetchIndexUrl = function(indexUrl) {
-				console.log('indexUrl:'+indexUrl);
+				$log.debug('indexUrl:'+indexUrl);
 
 				$scope.indexUrl = indexUrl;
 
@@ -761,13 +764,13 @@ angular
 		},
 
 		link: function(scope, element, attrs) {
-			console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
+			///console.log('attrs.keys:'+JSON.stringify(Object.keys(attrs)));
 
 			scope.fetchIndexUrl(attrs.src);
 
 			// observe attribute to interpolated attribute
 			/*attrs.$observe('ngShow', function(value) {
-				console.log('ngShow has changed value to ' + value);
+				$log.debug('ngShow has changed value to ' + value);
 				if (value) attrs.$set('ngShow', value);
 			});*/
 		},
