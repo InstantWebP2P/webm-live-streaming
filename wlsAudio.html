@@ -1,19 +1,21 @@
 <div class="wlsaudio">
   <audio class="wlsaudioa" 
     ng-src="{{srcA}}" 
-	wls-play="{{!muteA}}" 
+    wls-show="{{showA}}"     		
+	wls-play="{{playA}}" 
 	wls-mute="{{muteA}}" 
     wls-controls="{{ctrlA}}" 	
-    wls-param> 
+    wls-events> 
     Your browser does not support the audio tag.
   </audio>
 	
   <audio class="wlsaudiob" 
 	ng-src="{{srcB}}" 
-	wls-play="{{!muteB}}" 
+	wls-show="{{showB}}" 
+	wls-play="{{playB}}" 
 	wls-mute="{{muteB}}" 
 	wls-controls="{{ctrlB}}"			
-	wls-param> 
+	wls-events> 
     Your browser does not support the audio tag.
   </audio>
 </div>
