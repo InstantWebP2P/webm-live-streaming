@@ -671,7 +671,7 @@ angular
 	return function(scope, element, attr) {
 		// add event listener
 		element.on('play', function(){
-			///console.log('play '+attr.class);
+			console.log(attr.class+' play@'+Date.now());
 
 			// sync data
 			scope.$apply(function(){
@@ -680,7 +680,7 @@ angular
 			});
 		});
 		element.on('ended', function(){
-			///console.log('play ended '+attr.class);
+			console.log(attr.class+' play@'+Date.now());
 
 			// sync data
 			scope.$apply(function(){
@@ -688,30 +688,57 @@ angular
 				scope.streamingFSM(attr.class+'_ended');
 			});
 		});
+		element.on('playing', function(){
+			console.log(attr.class+' playing@'+Date.now());
+		});
+		
+		element.on('loadeddata', function(){
+			console.log(attr.class+' loadeddata@'+Date.now());
+		});
+		element.on('loadstart', function(){
+			console.log(attr.class+' loadstart@'+Date.now());
+		});
+		
 		element.on('loadedmetadata', function(){
-			///console.log('play loadedmetadata '+attr.class);
+			///console.log(attr.class+' loadedmetadata@'+Date.now());
 		});
 		/*element.on('progress', function(){
-            ///$log.debug('play progress '+attr.class);
+            ///$log.debug(attr.class+' progress@'+Date.now());
             $log.debug('networkState:'+JSON.stringify(element.prop('networkState')));
             $log.debug('played:'+JSON.stringify(element.prop('played')));
 		});*/
 		element.on('pause', function(){
-			///console.log('play pause '+attr.class);
-
-			///element[0].play();
+			console.log(attr.class+' pause@'+Date.now());
 		});
 		element.on('error', function(){
-			///console.log('play error '+attr.class);
+			///console.log(attr.class+' error@'+Date.now());
 		});
 		element.on('waiting', function(){
-			///console.log('play waiting '+attr.class);
+			console.log(attr.class+' waiting@'+Date.now());
 		});
 		element.on('empty', function(){
-			///console.log('play empty '+attr.class);
+			///console.log(attr.class+' empty@'+Date.now());
 		});
 		element.on('abort', function(){
-			///console.log('play abort '+attr.class);
+			///console.log(attr.class+' abort@'+Date.now());
+		});	
+		
+		element.on('seeking', function(){
+			console.log(attr.class+' seeking@'+Date.now());
+		});
+		element.on('seeked', function(){
+			console.log(attr.class+' seeked@'+Date.now());
+		});
+		
+		element.on('canplay', function(){
+			console.log(attr.class+' canplay@'+Date.now());
+		});
+		element.on('canplaythrough', function(){
+			console.log(attr.class+' canplaythrough@'+Date.now());
+		});
+		
+		element.on('durationchange', function(){
+			console.log(attr.class+' durationchange@'+Date.now());
 		});
 	};
 })
