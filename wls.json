@@ -1,9 +1,9 @@
 {
+	"live": true,
+	"stream_done": false,
     "mime": "video/webm",
     "playlist_length": 8,
     "playlist": [
-       "/medias/wlsa_0000.webm",
-       "/medias/wlsa_0001.webm",
        "/medias/wlsa_0002.webm",
        "/medias/wlsa_0003.webm",
        "/medias/wlsa_0004.webm",
