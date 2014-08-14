@@ -23,25 +23,24 @@ angular
 			$scope.indexUrl = '';
 			$scope.IndexCnt = {};
 
-			$scope.srcA = '';
-			$scope.srcB = '';
-			$scope.showA = true;
-			$scope.showB = false;
-			$scope.widthA = 320;
-			$scope.heightA = 240;
-			$scope.widthB = 320;
-			$scope.heightB = 240;
-			$scope.posterA = '';
-			$scope.posterB = '';
-			$scope.muteA = false;
-			$scope.muteB = true;
-			$scope.playA = true;
-			$scope.playB = false;
+			$scope.srcA     = '';
+			$scope.srcB     = '';
+			$scope.showA    = true;
+			$scope.showB    = false;
+			$scope.widthA   = 320;
+			$scope.heightA  = 240;
+			$scope.widthB   = 320;
+			$scope.heightB  = 240;
+			$scope.posterA  = '';
+			$scope.posterB  = '';
+			$scope.muteA    = false;
+			$scope.muteB    = true;
+			$scope.playA    = true;
+			$scope.playB    = false;
 			$scope.preloadA = false;
 			$scope.preloadB = true;			
-			$scope.ctrlA = false;
-			$scope.ctrlB = false;
-
+			$scope.ctrlA    = false;
+			$scope.ctrlB    = false;
 
 
 			$scope.fetchIndexUrl = function(indexUrl) {
@@ -60,7 +59,7 @@ angular
 				});
 			};
 
-			// streaming FSM
+			// Streaming FSM, support both VOD and LIVE
 			// input event, return action
 			// event: 
 			// - start, 
@@ -73,46 +72,43 @@ angular
 			// action:
 			// - start play on videoA and preload on videoB
 			// - switch-over between videoA and videoB
+			$scope.fsm = {};					
+
 			$scope.streamingFSM = function(event) {
-				$scope.fsm = $scope.fsm || {};
-				
-				$scope.fsm.live = $scope.IndexCnt.live;
-				$scope.fsm.stream_done = $scope.IndexCnt.stream_done;
-
-				$scope.fsm.playlist = $scope.IndexCnt.playlist;
-				$scope.fsm.playlist_length = $scope.IndexCnt.playlist_length;
-				
-				$scope.fsm.current = $scope.fsm.current || 0;
-
-				// check playlist length
-				if ($scope.fsm.playlist_length === 0) {
-					$log.debug('no video files');
-					return;
-				}
-
 				switch(event) {
 				case 'start':
-					// initial index
-					$scope.fsm.current = 0;
-
+					// initial fsm state
+					$scope.fsm.live            = $scope.IndexCnt.live;
+					$scope.fsm.stream_done     = $scope.IndexCnt.stream_done;
+					$scope.fsm.playlist        = $scope.IndexCnt.playlist;
+					$scope.fsm.playlist_length = $scope.IndexCnt.playlist_length;
+		
+					// calculate fsm.current
+					// notes: for live stream, set current to latest
+					$scope.fsm.current = $scope.fsm.live ? ($scope.fsm.playlist_length - 1) : 0;
+					
 					// fill video src
 					// play videoA, preload videoB
-					$scope.srcA = $scope.fsm.playlist[$scope.fsm.current++];
-					if ($scope.fsm.current === $scope.fsm.playlist_length) {
-						$scope.showA = true;
-						$scope.preloadA = false;
-						$scope.muteA = false;
-						$scope.playA = true;
+					$scope.srcA     = $scope.fsm.playlist[$scope.fsm.current++];
+					$scope.showA    = true;
+					$scope.preloadA = false;
+					$scope.muteA    = false;
+					$scope.playA    = true;
+					
+					$log.debug('ev videoa play, current:'+$scope.fsm.current);
 
+					if ($scope.fsm.current >= $scope.fsm.playlist_length) {
 						$log.debug('ev start, single video file');
 					} else {
 						$scope.srcB = $scope.fsm.playlist[$scope.fsm.current++];
 						
-						$scope.showB = false;
-						$scope.muteB = true;
-						$scope.playB = false;
-						$scope.preloadB = true;
+						$scope.showB             = false;
+						$scope.muteB             = true;
+						$scope.playB             = false;
+						$scope.preloadB          = true;
 						$scope.videob_preloading = true;
+						
+						$log.debug('ev videob preload, current:'+$scope.fsm.current);
 					}
 					$log.debug('ev start, current:'+$scope.fsm.current);
 
@@ -131,7 +127,7 @@ angular
 					
 					// action
 					function _wlsvideoa_ended($scope) {
-						if ($scope.fsm.current === $scope.fsm.playlist_length) {
+						if ($scope.fsm.current >= $scope.fsm.playlist_length) {
 							$scope.streamingFSM('stop');
 							$log.debug('ev videoa_ended, playlist done, trigger stop event');
 						} else {
@@ -139,7 +135,14 @@ angular
 								$scope.fsm.a_played = false;
 
 								// switch over
-								if ($scope.videob_preloading) {
+								{
+									// check preloading state
+									if (!$scope.videob_preloading) {
+										$scope.srcB = $scope.fsm.playlist[$scope.fsm.current++];
+										
+										$log.debug('ev videob load/play, current:'+$scope.fsm.current);
+									}
+									
 									// hide videoA, show videoB
 									$scope.showA = false;
 									$scope.showB = true;
@@ -150,16 +153,18 @@ angular
 
 									// play videoB, reset videoA's src and preload videoA
 									$scope.preloadB = false;
-									$scope.playB = true;
+									$scope.playB    = true;
 
 									$scope.playA = false;
-									$scope.srcA = $scope.fsm.playlist[$scope.fsm.current++];
-									$scope.preloadA = true;
-									$scope.videoa_preloading = true;
+									if ($scope.fsm.current < $scope.fsm.playlist_length) {
+										$scope.srcA              = $scope.fsm.playlist[$scope.fsm.current++];
+										$scope.preloadA          = true;
+										$scope.videoa_preloading = true;
+										
+										$log.debug('ev videoa preload, current:'+$scope.fsm.current);
+									}
 
 									$log.debug('ev videoa_ended, current:'+$scope.fsm.current);
-								} else {
-									$log.debug('ev videoa_ended: invalid operation 1');
 								}
 							} else {
 								$log.debug('ev videoa_ended: invalid operation 2');
@@ -168,17 +173,17 @@ angular
 					}
 
 					// check live stream in case playlist finished
-					if ($scope.fsm.current === $scope.fsm.playlist_length) {
+					if ($scope.fsm.current >= $scope.fsm.playlist_length) {
 						if ($scope.fsm.live && !$scope.fsm.stream_done) {
 							// request Index file again
 							$resource($scope.indexUrl).get({}, function(value){
 								$scope.IndexCnt = value;
                                 
 								// update playlist info
-								$scope.fsm.playlist = $scope.IndexCnt.playlist;
+								$scope.fsm.playlist        = $scope.IndexCnt.playlist;
 								$scope.fsm.playlist_length = $scope.IndexCnt.playlist_length;
-								$scope.fsm.live = $scope.IndexCnt.live;
-								$scope.fsm.stream_done = $scope.IndexCnt.stream_done;
+								$scope.fsm.live            = $scope.IndexCnt.live;
+								$scope.fsm.stream_done     = $scope.IndexCnt.stream_done;
 
 								// go on
 								_wlsvideoa_ended($scope);
@@ -208,7 +213,7 @@ angular
 
 					// action
 					function _wlsvideob_ended($scope) {
-						if ($scope.fsm.current === $scope.fsm.playlist_length) {
+						if ($scope.fsm.current >= $scope.fsm.playlist_length) {
 							$scope.streamingFSM('stop');
 							$log.debug('ev videob_ended, playlist done, trigger stop event');
 						} else {
@@ -216,7 +221,14 @@ angular
 								$scope.fsm.b_played = false;
 
 								// switch over
-								if ($scope.videoa_preloading) {
+								{
+									// check preloading state
+									if (!$scope.videoa_preloading) {
+										$scope.srcA = $scope.fsm.playlist[$scope.fsm.current++];
+										
+										$log.debug('ev videoa load/play, current:'+$scope.fsm.current);
+									}
+
 									// hide videoB, show videoA
 									$scope.showB = false;
 									$scope.showA = true;
@@ -227,16 +239,18 @@ angular
 
 									// play videoA, reset videoB's src and preload videoB
 									$scope.preloadA = false;
-									$scope.playA = true;
+									$scope.playA    = true;
 
 									$scope.playB = false;
-									$scope.srcB = $scope.fsm.playlist[$scope.fsm.current++];
-									$scope.preloadB = true;
-									$scope.videob_preloading = true;
+									if ($scope.fsm.current < $scope.fsm.playlist_length) {
+										$scope.srcB              = $scope.fsm.playlist[$scope.fsm.current++];
+										$scope.preloadB          = true;
+										$scope.videob_preloading = true;
+										
+										$log.debug('ev videob preload, current:'+$scope.fsm.current);
+									}
 
 									$log.debug('ev videob_ended, current:'+$scope.fsm.current);
-								} else {
-									$log.debug('ev videob_ended: invalid operation 1');
 								}
 							} else {
 								$log.debug('ev videob_ended: invalid operation 2');
@@ -245,17 +259,17 @@ angular
 					}
 					
 					// check live stream in case playlist finished
-					if ($scope.fsm.current === $scope.fsm.playlist_length) {
+					if ($scope.fsm.current >= $scope.fsm.playlist_length) {
 						if ($scope.fsm.live && !$scope.fsm.stream_done) {
 							// request Index file again
 							$resource($scope.indexUrl).get({}, function(value){
 								$scope.IndexCnt = value;
 								
 								// update playlist info
-								$scope.fsm.playlist = $scope.IndexCnt.playlist;
+								$scope.fsm.playlist        = $scope.IndexCnt.playlist;
 								$scope.fsm.playlist_length = $scope.IndexCnt.playlist_length;
-								$scope.fsm.live = $scope.IndexCnt.live;
-								$scope.fsm.stream_done = $scope.IndexCnt.stream_done;
+								$scope.fsm.live            = $scope.IndexCnt.live;
+								$scope.fsm.stream_done     = $scope.IndexCnt.stream_done;
 
 								// go on
 								_wlsvideob_ended($scope);
