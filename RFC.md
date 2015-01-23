@@ -51,4 +51,4 @@ WebM Live Streaming(alias wls) intends VOD/LIVE streaming video/audio with WebM 
 * and more ...
 
 
-
+### MIT license, copyright@tom zhou, iwebpp@gmail.com
