@@ -1,5 +1,5 @@
 
-# WebM Live Streaming RFC
+# WebM Live Streaming RFC, version 1.0.0
 WebM Live Streaming(alias wls) intends VOD/LIVE streaming video/audio with WebM using pure web technology.
 
 
@@ -8,12 +8,12 @@ WebM Live Streaming(alias wls) intends VOD/LIVE streaming video/audio with WebM 
 * Support live/vod streaming, including movie, tv, mobile-captured audio/video.
 * Including control profile in MPD file with video/audio content profile.
 * Support all available WebM media format: webm,mp4,aac,etc.
-* Support transfer HLS/DASH/etc to WLS, and vesa each-other.
-* Support Server push updated newwork bandwidth and statistic information to Client dynamically.
+* Support convert HLS/DASH/etc to WLS, and vesa each-other.
+* Support Server push updated network bandwidth and statistic information to Client dynamically.
 * WLS MPD median content profile supports the different screen size and bandwidth devices: SD, HD, UD, etc. 
-* WLS client will select the correct media content profile according to their screen size and bandwidth, event User-preference.
+* WLS client will select the correct media content profile according to their screen size and bandwidth, even User-preference.
 * WLS MPD exchange between Server and Client can use REST/HTTP/WebSocket, etc, that's angonistic to underlayr transport.
-* WLS media content is plain static file, which can be plain HTTP/GET.
+* WLS media content is plain static file, which can be got by plain HTTP/GET.
 * WLS media content file normally will play 2 to 10 seconds. 
 * WLS client support media content file cache locally.
 * Support SubTitle.
@@ -45,7 +45,7 @@ WebM Live Streaming(alias wls) intends VOD/LIVE streaming video/audio with WebM 
 ## WLS client reference implementation
 * Web client, which can get MPD file and media content static file over REST/HTTP/WebSocket. Like WebBrowser, etc.
 * WLS MPD parser, which can parse MPD json file, and extract media content profile and control profile.
-* WLS media player, which can play the individual median content file, like WebBrowser, Android/Expo/MediaPlay, etc.
+* WLS media player, which can play the individual median content file, like WebBrowser, Android/Expo/MediaPlayer, etc.
 * WLS user-control bar, which user can play/pause, adjust volumn, annotation, etc.
 
 * and more ...
