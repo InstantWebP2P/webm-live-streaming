@@ -1,5 +1,5 @@
 
-# WebM Live Streaming RFC, version 1.0.0
+# WebM Live Streaming RFC, version 1.0
 WebM Live Streaming(alias wls) intends VOD/LIVE streaming video/audio with WebM using pure web technology.
 
 
